@@ -69,11 +69,22 @@ function loadLibrary() {
 // =============================
 
 function renderSearchResults() {
-  resultsContainer.innerHTML = "";
+  resultsContainer.innerHTML = ""; 
 
   state.searchResults.forEach((book, index) => {
     const div = document.createElement("div");
-    div.classList.add("book")
+    div.classList.add("book");
+
+    if (book.cover_i) {
+      const img = document.createElement("img");
+      img.src = `https://covers.openlibrary.org/b/id/${book.cover_i}-M.jpg`;
+      div.appendChild(img);
+    } else {
+      const placeholder = document.createElement("div");
+      placeholder.classList.add("book-placeholder");
+      placeholder.textContent = book.title[0];
+      div.appendChild(placeholder);
+    }
 
     const title = document.createElement("h3");
     title.textContent = book.title;
@@ -101,7 +112,18 @@ function renderLibrary() {
 
   state.books.forEach((book, index) => {
     const div = document.createElement("div");
-    div.classList.add("book")
+    div.classList.add("book");
+
+    if (book.cover_i) {
+      const img = document.createElement("img");
+      img.src = `https://covers.openlibrary.org/b/id/${book.cover_i}-M.jpg`;
+      div.appendChild(img);
+    } else {
+      const placeholder = document.createElement("div");
+      placeholder.classList.add("book-placeholder");
+      placeholder.textContent = book.title[0];
+      div.appendChild(placeholder);
+    }
 
     const title = document.createElement("h3");
     title.textContent = book.title;
