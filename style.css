@@ -1,0 +1,79 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: #222;
+  color: #ddd;
+}
+
+header {
+  padding: 24px 48px;
+  background-color: #111;
+  text-align: center;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.5);
+}
+
+header h1 {
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+}
+
+#searchInput {
+  padding: 8px 12px;
+  border: none;
+  border-radius: 8px;
+  opacity: 0.5;
+}
+
+#searchBtn {
+  padding: 8px 12px;
+  border: none;
+  border-radius: 8px;
+  opacity: 0.5;
+}
+
+#searchSection {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-block: 24px;
+  gap: 24px;
+
+}
+
+#results, #library {
+  margin-inline: 24px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+}
+
+#results h3, #library h3 {
+  text-align: center;
+  margin-bottom: 12px;
+}
+
+#results p, #library p {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.add-btn, .remove-btn {
+  padding: 4px 8px;
+  border: none;
+  border-radius: 4px;
+  background-color: #ddd;
+  color: #222;
+  display: block;
+  margin-inline: auto;
+  
+}
+
+.book {
+  background-color: #333;
+  padding: 12px 24px;
+  border-radius: 8px;
+}
