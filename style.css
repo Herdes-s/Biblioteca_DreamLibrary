@@ -4,9 +4,17 @@
   box-sizing: border-box;
 }
 
+html,
+body {
+  height: 100%;
+  margin: 0;
+}
+
 body {
   background-color: #222;
   color: #ddd;
+  display: flex;
+  flex-direction: column;
 }
 
 header {
@@ -26,12 +34,15 @@ h2 {
   margin: 12px 24px;
 }
 
-
 #searchInput {
   padding: 8px 12px;
   border: none;
   border-radius: 8px;
   opacity: 0.5;
+}
+
+#app {
+  flex: 1;
 }
 
 #searchBtn {
@@ -53,7 +64,7 @@ h2 {
 .book-placeholder {
   width: 128px;
   height: 190px;
-  background: #ddd;
+  background: #888;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -67,6 +78,10 @@ h2 {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 12px;
+}
+
+#library {
+  margin-bottom: 24px;
 }
 
 #results h3,
@@ -96,13 +111,21 @@ h2 {
   background-color: #333;
   padding: 12px 24px;
   border-radius: 8px;
-}
 
-.book img, .book .book-placeholder {
-  display: block;
-  margin: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 .book img {
   height: 190px;
+}
+
+footer p {
+  background-color: #111;
+  color: #888;
+  padding-block: 24px;
+  text-align: center;
+  box-shadow: 0 -3px 10px rgba(0, 0, 0, 0.5);
 }
