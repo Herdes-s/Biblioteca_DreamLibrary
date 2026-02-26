@@ -5,6 +5,7 @@
 const state = {
   books: [],
   searchResults: [],
+  sortOrder: "asc",
 };
 
 // =============================
@@ -15,6 +16,7 @@ const searchInput = document.getElementById("searchInput");
 const searchBtn = document.getElementById("searchBtn");
 const resultsContainer = document.getElementById("results");
 const libraryContainer = document.getElementById("library");
+const sortBtn = document.getElementById("sortBtn");
 
 // =============================
 // FUNÇÕES API
@@ -69,9 +71,9 @@ function loadLibrary() {
 // =============================
 
 function renderSearchResults() {
-  resultsContainer.innerHTML = ""; 
+  resultsContainer.innerHTML = "";
 
-  state.searchResults.forEach((book, index) => {
+  state.searchResults.forEach((book) => {
     const div = document.createElement("div");
     div.classList.add("book");
 
@@ -96,7 +98,7 @@ function renderSearchResults() {
 
     const button = document.createElement("button");
     button.classList.add("add-btn");
-    button.dataset.index = index;
+    button.dataset.key = book.key;
     button.textContent = "Adicionar";
 
     div.appendChild(title);
@@ -110,7 +112,12 @@ function renderSearchResults() {
 function renderLibrary() {
   libraryContainer.innerHTML = "";
 
-  state.books.forEach((book, index) => {
+  const sortedBook = [...state.books].sort((a, b) => {
+    const comparison = a.title.localeCompare(b.title);
+    return state.sortOrder === "asc" ? comparison : -comparison;
+  });
+
+  sortedBook.forEach((book) => {
     const div = document.createElement("div");
     div.classList.add("book");
 
@@ -135,7 +142,7 @@ function renderLibrary() {
 
     const button = document.createElement("button");
     button.classList.add("remove-btn");
-    button.dataset.index = index;
+    button.dataset.key = book.key;
     button.textContent = "Remover";
 
     div.appendChild(title);
@@ -153,9 +160,9 @@ loadLibrary();
 
 resultsContainer.addEventListener("click", (e) => {
   if (e.target.classList.contains("add-btn")) {
-    const index = e.target.dataset.index;
+    const key = e.target.dataset.key;
 
-    const selectedBook = state.searchResults[index];
+    const selectedBook = state.searchResults.find((book) => book.key === key);
 
     const alreadyExists = state.books.some(
       (book) => book.key === selectedBook.key,
@@ -174,12 +181,21 @@ resultsContainer.addEventListener("click", (e) => {
 
 libraryContainer.addEventListener("click", (e) => {
   if (e.target.classList.contains("remove-btn")) {
-    const index = e.target.dataset.index;
+    const key = e.target.dataset.key;
 
-    state.books.splice(index, 1);
+    state.books = state.books.filter((book) => book.key !== key);
     saveLibrary();
     renderLibrary();
   }
+});
+
+sortBtn.addEventListener("click", () => {
+  state.sortOrder = state.sortOrder === "asc" ? "desc" : "asc";
+
+  sortBtn.textContent =
+    state.sortOrder === "asc" ? "Ordenar: A -> Z" : "Ordenar: Z -> A";
+
+  renderLibrary();
 });
 
 searchBtn.addEventListener("click", handleSearch);
