@@ -6,6 +6,7 @@ const state = {
   books: [],
   searchResults: [],
   sortOrder: "asc",
+  filter: "all",
 };
 
 // =============================
@@ -17,6 +18,7 @@ const searchBtn = document.getElementById("searchBtn");
 const resultsContainer = document.getElementById("results");
 const libraryContainer = document.getElementById("library");
 const sortBtn = document.getElementById("sortBtn");
+const statsContainer = document.getElementById("stats");
 
 // =============================
 // FUNÇÕES API
@@ -110,16 +112,32 @@ function renderSearchResults() {
 }
 
 function renderLibrary() {
+  let filteredBooks = [...state.books];
+
+  if (state.filter === "read") {
+    filteredBooks = filteredBooks.filter((book) => book.read);
+  }
+  if (state.filter === "unread") {
+    filteredBooks = filteredBooks.filter((book) => !book.read);
+  }
+
   libraryContainer.innerHTML = "";
 
-  const sortedBook = [...state.books].sort((a, b) => {
+  filteredBooks = [...state.books].sort((a, b) => {
     const comparison = a.title.localeCompare(b.title);
     return state.sortOrder === "asc" ? comparison : -comparison;
   });
 
-  sortedBook.forEach((book) => {
+  filteredBooks.forEach((book) => {
     const div = document.createElement("div");
     div.classList.add("book");
+
+    if (book.read) {
+      div.classList.add("book-read");
+    }
+
+    const buttonSet = document.createElement("div");
+    buttonSet.classList.add("button-set");
 
     if (book.cover_i) {
       const img = document.createElement("img");
@@ -140,17 +158,47 @@ function renderLibrary() {
       ? book.author_name[0]
       : "Autor desconhecido";
 
+    if (book.read) {
+      const badge = document.createElement("span");
+      badge.classList.add("read-badge");
+      badge.textContent = "✔ Lido";
+      div.appendChild(badge);
+    }
+
     const button = document.createElement("button");
     button.classList.add("remove-btn");
     button.dataset.key = book.key;
     button.textContent = "Remover";
 
+    const toggleBtn = document.createElement("button");
+    toggleBtn.classList.add("toggle-btn");
+    toggleBtn.dataset.key = book.key;
+    toggleBtn.textContent = book.read
+      ? "Marcar como não lido"
+      : "Marcar como lido";
+
+    buttonSet.appendChild(button);
+    buttonSet.appendChild(toggleBtn);
+
     div.appendChild(title);
     div.appendChild(author);
-    div.appendChild(button);
+    div.appendChild(buttonSet);
 
     libraryContainer.appendChild(div);
   });
+  renderStats();
+}
+
+function renderStats() {
+  const total = state.books.length;
+  const readCount = state.books.filter((book) => book.read).length;
+  const unreadCount = total - readCount;
+
+  statsContainer.innerHTML = `
+    📚 Total: ${total} |
+    ✅ Lidos: ${readCount} |
+    📖 Não lidos: ${unreadCount}
+  `;
 }
 
 loadLibrary();
@@ -173,19 +221,32 @@ resultsContainer.addEventListener("click", (e) => {
       return;
     }
 
-    state.books.push(selectedBook);
+    state.books.push({ ...selectedBook, read: false });
     saveLibrary();
     renderLibrary();
   }
 });
 
 libraryContainer.addEventListener("click", (e) => {
-  if (e.target.classList.contains("remove-btn")) {
-    const key = e.target.dataset.key;
+  const key = e.target.dataset.key;
 
+  // REMOVER
+  if (e.target.classList.contains("remove-btn")) {
     state.books = state.books.filter((book) => book.key !== key);
+
     saveLibrary();
     renderLibrary();
+  }
+
+  // TOGGLE READ
+  if (e.target.classList.contains("toggle-btn")) {
+    const book = state.books.find((book) => book.key === key);
+
+    if (book) {
+      book.read = !book.read;
+      saveLibrary();
+      renderLibrary();
+    }
   }
 });
 

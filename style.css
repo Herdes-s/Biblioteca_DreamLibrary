@@ -129,3 +129,24 @@ footer p {
 #sortBtn {
   margin-right: 24px;
 }
+
+.button-set {
+  display: flex;
+  gap: 8px;
+}
+
+.book-read {
+  opacity: 0.6;
+  border: 2px solid #4caf50;
+}
+
+.read-badge {
+  display: inline-block;
+  margin: 6px 0;
+  padding: 4px 8px;
+  background-color: #4caf50;
+  color: white;
+  font-size: 12px;
+  border-radius: 6px;
+  font-weight: bold;
+}
